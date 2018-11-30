@@ -1,17 +1,22 @@
 const jwt = require("jsonwebtoken");
 
 exports.act = (req,res) => {
-    const token = req.query.jwt;
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const resp = {
-            issuer: decoded.appId,
-            recipient: decoded.targetId,
-            permission: decoded.permission
+    const token = req.query.token;
+    if(token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const resp = {
+                issuer: decoded.appId,
+                recipient: decoded.targetId,
+                permission: decoded.permission
+            }
+                res.status(200).send(resp);
         }
-            res.send(resp);
+        catch(err) {
+            console.log(err);
+            res.status(500).send("JWTDecodingError");
+        }
     }
-    catch(err) {
-        res.sendStatus(403);
-    }
+    else res.status(403).send("NoTokenProvided");
+    
 }

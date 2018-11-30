@@ -10,4 +10,7 @@ exports.route = (req, res) => {
     else if (req.url.includes("/ad/verify")) {
         require("./validate").act(req,res);
     }
+    else if (req.url.includes("ad/profile")) {
+        require("./profile").act(req,res);
+    }
 }
