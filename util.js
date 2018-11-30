@@ -1,18 +1,22 @@
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
-exports.createId = () => {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
-    for (var i = 0; i < 20; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-    return text;
-  }
+var stateCache = {};
+
+function createId() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 20; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+
+exports.createId = createId;
 
 exports.createHash = (appId) => {
-    return crypto.createHash("sha256").update("secret"+appId).digest('hex');
+  return crypto.createHash("sha256").update("secret" + appId).digest('hex');
 }
 
 exports.dataBaseSettings = () => {
@@ -22,11 +26,24 @@ exports.dataBaseSettings = () => {
     server: process.env.DATABASE_URL,
     database: "Applications",
     options: {
-        encrypt: true // Use this if you're on Windows Azure
+      encrypt: true // Use this if you're on Windows Azure
     }
-};
+  };
 }
 
 exports.decodeJWT = token => {
   return jwt.decode(token);
+}
+
+exports.getStateUrl = state => {
+  const cbUrl = stateCache[state];
+  delete stateCache[state];
+  return cbUrl;
+}
+
+exports.createLoginLink = (cb) => {
+  const state = createId();
+
+  stateCache[state] = cb;
+  return "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=" + process.env.CLIENT_ID + "&response_type=code&redirect_uri=http://localhost:3000/GET/ad/callback&response_mode=query&state=" + state + "&scope=user.read offline_access";
 }

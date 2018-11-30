@@ -4,7 +4,7 @@ const router = require("./Routes/handler");
 const app = express();
 require('dotenv').config();
 
-//TODO: Validate
+//TODO: Validate AAD tokens
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/Pages");

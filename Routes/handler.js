@@ -1,10 +1,6 @@
 const sql = require("mssql");
 
 exports.route = function (req,res) {
-/*    if(!req.query.appId) {
-        res.sendStatus(403);
-        return;
-    }*/
     
     
     let urlArr = req.url.toLowerCase().split("/");

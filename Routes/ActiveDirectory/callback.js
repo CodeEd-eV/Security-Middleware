@@ -1,6 +1,7 @@
 const request = require("request");
+const util = require("../../util");
 
-exports.act = (req,res,stateCache) => {
+exports.act = (req,res) => {
     const code = req.query.code;
     console.log(req.query);
         if (!code) {
@@ -25,9 +26,11 @@ exports.act = (req,res,stateCache) => {
             const state = req.query.state;
             if (error) throw new Error(error);
             const json = JSON.parse(body);
-            const cbUrl = stateCache[state];
-            delete stateCache[state];
+            const cbUrl = util.getStateUrl(state);
             if(json.error) res.redirect(403,cbUrl + "?error="+json.error);
-            else res.redirect(cbUrl + "?token=" + json.access_token);
+            else {
+                if(cbUrl.includes("?")) res.redirect(cbUrl + "&token=" + json.access_token);
+                else res.redirect(cbUrl + "?token=" + json.access_token);
+            }
         });
 }

@@ -1,10 +1,5 @@
 exports.route = (req,res) => {
     console.log(req.query)
-    if(!req.query.authorization) {
-        res.sendStatus(403);
-        return;
-    }
-    else {
         if(req.url.includes("apps/register")) {
             require("./registerForm").act(req,res);
         }
@@ -15,6 +10,5 @@ exports.route = (req,res) => {
             require("./approve").act(req,res);
         }
         else res.sendStatus(404);
-    }
 
 }

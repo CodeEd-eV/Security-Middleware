@@ -1,6 +1,8 @@
 const sql = require("mssql");
 const util = require("../../util");
 
+//TODO: Refactor storing process
+
 exports.act = (req, res) => {
     const settings = util.dataBaseSettings();
     if (req.query.appName != "") {
@@ -23,7 +25,7 @@ exports.act = (req, res) => {
             const appName = req.query.appName;
             applications.forEach(el => {
                 if (el.name == appName) {
-                    res.send("Duplicate!");
+                    res.status(403).send("Duplicate!");
                     console.log("Dodged a duplicate bullet here");
                 }
             })
