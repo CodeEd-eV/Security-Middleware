@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Register new app</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <style>
+        table {
+                width: 100%;
+                text-align: center;
+            }
+        </style>
+</head>
+
+<body>
+    <h1>Register your new app</h1>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">App-Name</span>
+        </div>
+        <input type="text" class="form-control" id="appId" aria-describedby="basic-addon3">
+    </div>
+    <h2>Permissions</h2>
+    <table>
+        <th>
+        <td>Lese-Zugriff</td>
+        <td>Schreib-Zugriff</td>
+        </th>
+        <% for(var i = 0; i < apps.length; i++) { %>
+        <tr>
+            <td>
+                <%= apps[i] %>
+            </td>
+            <td><input type="checkbox" class="form-control"></td>
+            <td><input type="checkbox" class="form-control"></td>
+        </tr>
+        <% } %>
+    </table>
+    <button class="btn btn-primary" type="submit" onclick="createApp()">Create App</button>
+
+    <script>
+        function createApp() {
+            const name = document.getElementById("appId").value;
+            var appPerms = "";
+            const tableContent = document.getElementsByTagName("tbody")[0].children;
+            for (var i = 1; i < tableContent.length; i++) {
+                const read = tableContent[i].children[1].children[0].checked;
+                const write = tableContent[i].children[2].children[0].checked;
+                if (read || write) {
+                    appPerms+= "["+tableContent[i].children[0].innerText+","+read+","+write+"],";
+                }
+            }
+            appPerms = appPerms.substring(0,appPerms.length-1);
+            var http = new XMLHttpRequest();
+            var query = "appName=" + document.getElementById("appId").value +
+            "&appId=2&" +
+            "perms="+appPerms +
+            "&authorization=4"+
+            "&userId=TobiDevTest";
+            var url = 'http://localhost:3000/POST/apps/new?'+query;
+            var params = "test:true";
+            http.open('POST', url, true);
+
+            //Send the proper header information along with the request
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.onreadystatechange = function () {//Call a function when the state changes.
+                if (http.readyState == 4 && http.status == 200) {
+                }
+            }
+            http.send(params);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,60 +1,37 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+const router = require("./Routes/handler");
 const app = express();
-const request = require("request");
 require('dotenv').config();
 
 //TODO: Validate
 //TODO: Refresh token
 
-var stateCache = {};
+//TODO: Wir brauchen AppID zur Validierung
+//TODO: Get Profile
 
-app.get("/", (req, res) => {
-    const state = createId();
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/Pages");
 
-    stateCache[state] = req.query.cb;
-    res.send("https://login.microsoftonline.com/codeed.onmicrosoft.com/oauth2/authorize?client_id="+process.env.CLIENT_ID+"&response_type=code&redirect_uri=http://localhost:3000/callback&response_mode=query&state="+state);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use((req,res) => {
+    router.route(req,res);
 });
-app.get("/callback", (req, res) => {
-    const code = req.query.code;
-    console.log(code);
-    console.log(!code);
+/*
+
+app.get("/GET/user", (req,res) => {
+    const code = req.query.bearer;
     if(!code) {
-        res.send(req.query);
-        return;
+        res.sendStatus(403);
     }
-
-    var options = {
-        method: 'POST',
-        url: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-        form:
-        {
-            grant_type: 'authorization_code',
-            code: code,
-            client_secret: process.env.CLIENT_SECRET,
-            redirect_uri: 'http://localhost:3000/callback',
-            client_id: process.env.CLIENT_ID,
-            scope: 'user.read'
-        }
-    };
-
-    request(options, function (error, response, body) {
-        const state = req.query.state;
-        if (error) throw new Error(error);
-        const json = JSON.parse(body);
-        console.log(body);
-        const cbUrl = stateCache[state];
-        res.redirect(cbUrl+"?token="+json.access_token);
-    });
+    else {
+        request.get("https://graph.microsoft.com/v1.0/me").auth(null,null,true,code)
+        .on("response", (resp) => {
+            res.send(resp);
+        })
+    }
 })
-
-function createId() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
-    for (var i = 0; i < 20; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-    return text;
-  }
+*/
 
 app.listen(process.env.PORT || 3000);

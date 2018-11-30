@@ -10,8 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mssql": "^4.2.3",
     "request": "^2.88.0"
   }
 }
