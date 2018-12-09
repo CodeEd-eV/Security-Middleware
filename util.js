@@ -62,5 +62,3 @@ function validateJWT(token) {
   ) return true;
   else return false;
 }
-
-//TODO: URL Refactoring
