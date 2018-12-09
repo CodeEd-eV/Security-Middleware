@@ -56,7 +56,6 @@ exports.createLoginLink = (cb) => {
 function validateJWT(token) {
   const jwtToken = jwt.decode(token);
   if(
-    jwtToken.iss == "https://sts.windows.net/84c31ca0-ac3b-4eae-ad11-519d80233e6f/" &&
     jwtToken.app_displayname == "CodeEd User Authentication" &&
     jwtToken.appid == "02b94afd-99a6-4167-a39a-f7f06a2f410f"
   ) return true;
