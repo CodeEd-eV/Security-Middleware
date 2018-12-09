@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Register new app</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <style>
+        table {
+                width: 100%;
+                text-align: center;
+            }
+        </style>
+</head>
+
+<body>
+    <h1>Register your new app</h1>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">App-Name</span>
+        </div>
+        <input type="text" class="form-control" id="appId" aria-describedby="basic-addon3">
+    </div>
+    <h2>Your own apps</h2>
+    <table>
+        <tr>
+            <td>App Name</td>
+            <td>Permissions granted</td>
+            <td>Permissions received</td>
+        </tr>
+        <% for(var i = 0; i < apps.length; i++) { %>
+        <tr style="border: 1px solid black">
+            <td>
+                <%= apps[i].ClearName %>
+            </td>
+            <td>
+                <% for(var j = 0; j < apps[i].received.length; j++) { %>
+                <%= apps[i].received[j][0] %>:
+                <%= apps[i].received[j][1] %> /
+                <%= apps[i].received[j][2] %>
+                <% if(apps[i].received[j][2] == 0) { %>
+                <span from="<%= apps[i].received[j][3] %>" to="<%= apps[i].ID %>" style="background-color: lightgrey; border: 1px solid black"
+                    onclick="approve(this)">approve</span>
+                <% } %><br>
+                <% } %>
+
+
+
+            </td>
+            <td>
+                <% for(var j = 0; j < apps[i].granted.length; j++) { %>
+                <%= apps[i].granted[j][0] %>:
+                <%= apps[i].granted[j][1] %> /
+                <%= apps[i].granted[j][2] %>
+                <br>
+                <% } %>
+            </td>
+
+        </tr>
+        <% } %>
+    </table>
+
+    <script>
+        function httpGet(theUrl) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", theUrl, false); // false for synchronous request
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+        function approve(el) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const from = el.getAttribute("from");
+            const to = el.getAttribute("to");
+
+            var suc = httpGet(window.location.hostname + "/GET/apps/approve?token=" + token + "&from=" + from + "&to=" + to);
+            console.log(suc);
+            if (suc == "Successful") {
+                el.onclick = "";
+                el.style.backgroundColor = "green";
+                el.innerHTML = "Successful!";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

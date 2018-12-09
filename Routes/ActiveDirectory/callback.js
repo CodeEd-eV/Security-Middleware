@@ -3,7 +3,7 @@ const util = require("../../util");
 
 exports.act = (req,res) => {
     const code = req.query.code;
-    console.log(req.query);
+    console.log(code);
         if (!code) {
             res.send(req.query);
             return;

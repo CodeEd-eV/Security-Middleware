@@ -6,8 +6,8 @@ exports.act = (req,res) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const resp = {
-                issuer: decoded.appId,
-                recipient: decoded.targetId,
+                from: decoded.appId,
+                to: decoded.targetId,
                 permission: decoded.permission
             }
                 res.status(200).send(resp);

@@ -9,6 +9,9 @@ exports.route = (req,res) => {
         else if(req.url.includes("apps/approve")) {
             require("./approve").act(req,res);
         }
+        else if(req.url.includes("apps/view")) {
+            require("./view").act(req,res);
+        }
         else res.sendStatus(404);
 
 }

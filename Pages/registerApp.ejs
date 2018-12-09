@@ -43,6 +43,12 @@
 
     <script>
         function createApp() {
+            var btn = document.getElementsByTagName("button")[0];
+            btn.style.backgroundColor = "grey";
+            btn.onclick = "";
+            btn.innerHTML = "Please wait";
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
             const name = document.getElementById("appId").value;
             var appPerms = "";
             const tableContent = document.getElementsByTagName("tbody")[0].children;
@@ -50,17 +56,15 @@
                 const read = tableContent[i].children[1].children[0].checked;
                 const write = tableContent[i].children[2].children[0].checked;
                 if (read || write) {
-                    appPerms+= "["+tableContent[i].children[0].innerText+","+read+","+write+"],";
+                    appPerms += "[" + tableContent[i].children[0].innerText + "," + read + "," + write + "],";
                 }
             }
-            appPerms = appPerms.substring(0,appPerms.length-1);
+            appPerms = appPerms.substring(0, appPerms.length - 1);
             var http = new XMLHttpRequest();
-            var query = "appName=" + document.getElementById("appId").value +
-            "&appId=2&" +
-            "perms="+appPerms +
-            "&authorization=4"+
-            "&userId=TobiDevTest";
-            var url = 'http://localhost:3000/POST/apps/new?'+query;
+            var query = "appName=" + name +
+                "&perms=" + appPerms +
+                "&token="+token;
+            var url = 'http://localhost:3000/POST/apps/new?' + query;
             var params = "test:true";
             http.open('POST', url, true);
 
@@ -72,6 +76,8 @@
                 }
             }
             http.send(params);
+            btn.style.backgroundColor = "green";
+            btn.innerHTML = "Success!";
         }
     </script>
 </body>

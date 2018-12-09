@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken");
 exports.act = (req, res) => {
     const requester = req.query.from;
     const respondent = req.query.to;
-
-    const settings = util.dataBaseSettings();
+    if(requester && respondent) {
+        const settings = util.dataBaseSettings();
     sql.connect(settings).then(pool => {
         return pool.request()
             .input("fromId", requester)
@@ -35,4 +35,10 @@ exports.act = (req, res) => {
             res.status(200).send(token);
         }
     })
+    }
+    else {
+        res.sendStatus(403);
+    }
+
+    
 }

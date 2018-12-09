@@ -1,11 +1,11 @@
 const sql = require("mssql");
 const util = require("../../util");
 
-//TODO: Refactor storing process
-
 exports.act = (req, res) => {
+    sql.close();
     const settings = util.dataBaseSettings();
-    if (req.query.appName != "") {
+    const jwt = req.query.token;
+    if (req.query.appName != "" && jwt &&  util.validateJWT(jwt)) {
         let applications = [];
         sql.connect(settings).then(pool => {
             return pool.request()
@@ -21,7 +21,7 @@ exports.act = (req, res) => {
             });
 
             let appId = util.createId();
-            const user = req.query.userId;
+            const user = util.decodeJWT(jwt).oid;
             const appName = req.query.appName;
             applications.forEach(el => {
                 if (el.name == appName) {
@@ -29,7 +29,7 @@ exports.act = (req, res) => {
                     console.log("Dodged a duplicate bullet here");
                 }
             })
-            appId = checkId("9HPKUXpS3Y6DQ8ipHS2H", applications);
+            appId = checkId(appId, applications);
 
             var permissionStringArray = req.query.perms.split("],[");
             permissionStringArray[0] = permissionStringArray[0].substring(1, permissionStringArray[0].length);
@@ -73,15 +73,14 @@ exports.act = (req, res) => {
                         .query("INSERT INTO permissions(fromId,toId,permission,approved) VALUES " + permSqlString)
                 }).then(result => {
                     sql.close();
-                    res.sendStatus(200);
-                    //TODO: Send E-Mails to App Owners
-                    //TODO: Encrypt from and to adress
+                    res.status(200).send("Successful!");
+
                 })
             })
 
         })
     }
-    else res.send("Error");
+    else res.status(403).send("Error");
 }
 
 function checkId(generatedId, apps) {
@@ -93,5 +92,4 @@ function checkId(generatedId, apps) {
     }
 
     return generatedId;
-
 }

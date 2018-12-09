@@ -2,8 +2,9 @@ const sql = require("mssql");
 const util = require("../../util");
 
 exports.act = (req, res) => {
+    sql.close();
     const token = req.query.token;
-    if(token) { //TODO: Verify token
+    if(token && util.validateJWT(token)) {
         const settings = util.dataBaseSettings();
 
         sql.connect(settings).then(pool => {
