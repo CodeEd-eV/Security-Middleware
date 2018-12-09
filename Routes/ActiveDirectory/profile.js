@@ -22,7 +22,6 @@ exports.act = async (req, res) => {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
       body = JSON.parse(body);
-      console.log(body);
       res.send(body);
     });
   }
