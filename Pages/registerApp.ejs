@@ -64,7 +64,7 @@
             var query = "appName=" + name +
                 "&perms=" + appPerms +
                 "&token="+token;
-            var url = 'http://localhost:3000/POST/apps/new?' + query;
+            var url = window.location.protocol+'://'+window.location.hostname+'/POST/apps/new?' + query;
             var params = "test:true";
             http.open('POST', url, true);
 

@@ -17,7 +17,7 @@ exports.act = (req,res) => {
                 grant_type: 'authorization_code',
                 code: code,
                 client_secret: process.env.CLIENT_SECRET,
-                redirect_uri: 'http://localhost:3000/GET/ad/callback',
+                redirect_uri: process.env.BASE_URL+'/GET/ad/callback',
                 client_id: process.env.CLIENT_ID
             }
         };

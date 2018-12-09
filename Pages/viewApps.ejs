@@ -75,7 +75,7 @@
             const from = el.getAttribute("from");
             const to = el.getAttribute("to");
 
-            var suc = httpGet(window.location.hostname + "/GET/apps/approve?token=" + token + "&from=" + from + "&to=" + to);
+            var suc = httpGet(window.location.protocol+"://"+window.location.hostname + "/GET/apps/approve?token=" + token + "&from=" + from + "&to=" + to);
             console.log(suc);
             if (suc == "Successful") {
                 el.onclick = "";
