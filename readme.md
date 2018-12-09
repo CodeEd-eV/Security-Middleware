@@ -1,7 +1,5 @@
 # CodeEd STS (Security Token Service)
 
-The Service is implemented to work within the CodeEd organization, but can be used for every Azure Active Directory instance that has a fitting architecture. The architecture of the solution is described at the end of the documentation.
-
 The STS consists of three parts:
 * The Active Directory (AD) handler that handles user authentification
 * The Machine Token (MT) handler that manages Machine to Machine tokens used for two backend services to communicate with each other
