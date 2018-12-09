@@ -53,10 +53,6 @@ exports.createLoginLink = (cb) => {
   return "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=" + process.env.CLIENT_ID + "&response_type=code&redirect_uri=http://localhost:3000/GET/ad/callback&response_mode=query&state=" + state + "&scope=user.read offline_access";
 }
 
-exports.getProfile = async jwt => {
-  
-}
-
 function validateJWT(token) {
   const jwtToken = jwt.decode(token);
   if(
