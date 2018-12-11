@@ -13,6 +13,10 @@ exports.act = (req, res) => {
                 .query("SELECT p.permission, p.approved, a.ClearName AS FromApp, a2.ClearName AS ToApp, a.ID AS FromId, a2.ID AS ToId FROM permissions p LEFT JOIN apps a on p.fromId = a.ID LEFT JOIN apps a2 on p.toId = a2.ID WHERE a.Owner='"+user+"' OR a2.Owner='"+user+"'")
         }).then(result => {
             sql.close();
+            if(result.recordset.length <= 0) {
+                res.status(403).send("You do not have any apps yet!");
+                return;
+            }
             result.recordset.forEach(el => {
                 el.approved = JSON.parse(JSON.stringify(el.approved)).data[0];
             });
